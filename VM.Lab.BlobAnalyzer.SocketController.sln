@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VM.BlobAnalyzer.SocketController", "VM.BlobAnalyzer.SocketController\VM.BlobAnalyzer.SocketController.csproj", "{0418B823-D824-4913-A695-B774EAB1C830}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VM.BlobAnalyzer.SocketController.UnitTest", "VM.BlobAnalyzer.SocketController.UnitTest\VM.BlobAnalyzer.SocketController.UnitTest.csproj", "{16E00457-7983-4F4D-846D-350154B695E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{5417E0C1-1762-4E4D-878D-1BE0794750AE}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0418B823-D824-4913-A695-B774EAB1C830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0418B823-D824-4913-A695-B774EAB1C830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0418B823-D824-4913-A695-B774EAB1C830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0418B823-D824-4913-A695-B774EAB1C830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16E00457-7983-4F4D-846D-350154B695E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16E00457-7983-4F4D-846D-350154B695E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16E00457-7983-4F4D-846D-350154B695E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16E00457-7983-4F4D-846D-350154B695E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C37C0A6-3A6D-41F0-A131-848B2B5585EE}
+	EndGlobalSection
+EndGlobal
