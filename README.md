@@ -66,7 +66,7 @@ ACK|FINISH|Sample Id
 # Technical details
 
 ## BlobAnalyzercontroller
-Handles message generation and consumption between Rhine PLC and BlobAnalyzer, the commands are send to the BlobAnalyzer via the _IBlobAnalyzerControlListener
+Handles message generation and consumption between controller/PLC and BlobAnalyzer, the commands are send to the BlobAnalyzer via the _IBlobAnalyzerControlListener
 
 ## SocketServer
 Raw socket server that creates a socket server and forwards messages to the BlobAnalyzerController
@@ -132,14 +132,14 @@ class SocketServer {
 
 BlobAnalyzerControl <|-- BlobAnalyzerController 
 class BlobAnalyzerController {
-    -CPFCommunicationStateController
+    -CommunicationStateController
     -ResultCalculationController
     -SocketServer
 }
 
-class CPFMessagePacket {
-    +CPFMessagePacket[] CreateResultVector(string activityId, DataTable resultTable)$
-    +CPFMessagePacket(string message)
+class MessagePacket {
+    +MessagePacket[] CreateResultVector(string activityId, DataTable resultTable)$
+    +MessagePacket(string message)
     +string Ack(string originalMessage)$
     
     +PacketHeader Header 
@@ -153,7 +153,7 @@ class CPFMessagePacket {
     +float W2T5 
     +string OrgCode 
     +SamplingStatus Status 
-    +CPFMessagePacket AckPackage 
+    +MessagePacket AckPackage 
     
     +int ResultLineIdx 
     +int ResultLineCount 
@@ -161,7 +161,7 @@ class CPFMessagePacket {
     +string ResultLineValue 
 }
 
-CPFMessagePacket -- PacketHeader
+MessagePacket -- PacketHeader
 class PacketHeader {
     UNKNOWN
     START
