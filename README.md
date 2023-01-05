@@ -34,33 +34,33 @@ ACK|SAMPLING_DONE|Sample Id
 ## STOP
 Stops analysis or flushing, corresponds to pressing the stop button on the user interface, the device will not empty/flush after this command
 ```text
-STOP|Sample Id
-ACK|STOP|Sample Id
+STOP
+ACK|STOP
 ```
 
 ## FLUSH
 Flushes conveyor or vacuums the X/Y plate
 ```text
 
-FLUSH|Sample Id
-ACK|FLUSH|Sample Id
+FLUSH
+ACK|FLUSH
 ```
 
 ## FINISH
 Saves the generated results and blob collections, _Notice_, this can only be called after a measurement was made and the device is in the stopped state
 ```text
-FINISH|Sample Id
-ACK|FINISH|Sample Id
+FINISH
+ACK|FINISH
 ```
 
 ## Example transaction after the blobAnalyzer is started
 ```text
 >> Customer: START|lot543887|Corn_2022_v2|CHG|A test measurement
 << VMController: ACK|START|lot543887|Corn_2022_v2|CHG|A test measurement
-<< VMController: SAMPLING_DONE|lot543887
->> Customer: ACK|SAMPLING_DONE|lot543887
->> Customer: FINISH|lot543887
-<< VMController: ACK|FINISH|lot543887
+<< VMController: SAMPLING_DONE
+>> Customer: ACK|SAMPLING_DONE
+>> Customer: FINISH
+<< VMController: ACK|FINISH
 ```
 
 # Technical details

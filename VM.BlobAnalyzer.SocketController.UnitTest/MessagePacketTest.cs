@@ -65,10 +65,9 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
             {
                 new BlobAnalyzerMessagePacket
                 {
-                    Command = PacketHeader.FINISH,
-                    SampleId = "lot543887"
+                    Command = PacketHeader.FINISH
                 },
-                "FINISH|lot543887"
+                "FINISH"
             };
             
             yield return new object[]
@@ -77,19 +76,17 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
                 {
                     Command = PacketHeader.ACK,
                     AckPackageCommand = PacketHeader.FINISH,
-                    SampleId = "lot543887"
                 },
-                "ACK|FINISH|lot543887"
+                "ACK|FINISH"
             };
             
             yield return new object[]
             {
                 new BlobAnalyzerMessagePacket
                 {
-                    Command = PacketHeader.STOP,
-                    SampleId = "lot543887"
+                    Command = PacketHeader.STOP
                 },
-                "STOP|lot543887"
+                "STOP"
             };
             
             yield return new object[]
@@ -98,29 +95,26 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
                 {
                     Command = PacketHeader.ACK,
                     AckPackageCommand = PacketHeader.STOP,
-                    SampleId = "lot543887"
                 },
-                "ACK|STOP|lot543887"
+                "ACK|STOP"
             };
             
             yield return new object[]
             {
                 new BlobAnalyzerMessagePacket
                 {
-                    Command = PacketHeader.FLUSH,
-                    SampleId = "lot543887"
+                    Command = PacketHeader.FLUSH
                 },
-                "FLUSH|lot543887"
+                "FLUSH"
             };
             yield return new object[]
             {
                 new BlobAnalyzerMessagePacket
                 {
                     Command = PacketHeader.ACK,
-                    AckPackageCommand = PacketHeader.FLUSH,
-                    SampleId = "lot543887"
+                    AckPackageCommand = PacketHeader.FLUSH
                 },
-                "ACK|FLUSH|lot543887"
+                "ACK|FLUSH"
             };
         }
         

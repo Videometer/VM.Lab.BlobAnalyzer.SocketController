@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using VM.Lab.Interfaces.Autofeeder;
+using VM.Lab.Interfaces.BlobAnalyzer;
 
 namespace VM.BlobAnalyzer.SocketController.UnitTest
 {
@@ -13,26 +13,56 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
         [Test]
         public void TestSendingStartMessageInvokesStartAction()
         {
-            TestingChannel channel = new TestingChannel((x) => { });
-            channel.MessageReceived += (sender, args) => { };
+            TestingChannel channel = new TestingChannel();
+            using (new AutofeederController(this, channel))
+            {
+                // This message should pass into the controller that invoked the Start(x,y,z) callback
+                string message = "START|lot543887|Corn_2022_v2|CHG|A test measurement";
+                channel.GenerateMessage(message);
 
-            AutofeederController controller = new AutofeederController(this, channel);
-            channel.GenerateMessage("START|lot543887|Corn_2022_v2|CHG|A test measurement");
-            
-            Thread.Sleep(500);
-            CallbackLog.TryDequeue(out string startCommandWasInvoked);
-            Assert.AreEqual("lot543887, CHG, A test measurement", startCommandWasInvoked);
+                // Check that the start method in the controller was invoked as expected
+                CallbackLog.TryDequeue(out var loadRecipeCommandInvokeMessage);
+                Assert.AreEqual("LoadRecipe(Corn_2022_v2)", loadRecipeCommandInvokeMessage);
+                
+                // Check that load recipe method in the controller was invoked as expected
+                CallbackLog.TryDequeue(out var startCommandInvokeMessage);
+                Assert.AreEqual("Start(lot543887, CHG, A test measurement)", startCommandInvokeMessage);
+                
+                // Check that the correct reply was replied on the channel
+                channel.BroadcastedMessages.TryDequeue(out var broadcastedReply);
+                Assert.AreEqual("ACK|"+message, broadcastedReply);
+            }
+        }
+        
+        [Test]
+        public void TestSendingStopMessageAfterStartInvokesStopAction()
+        {
+            TestingChannel channel = new TestingChannel();
+            using (var controller = new AutofeederController(this, channel))
+            {
+                // This message should pass into the controller that invoked the Start(x,y,z) callback
+                channel.GenerateMessage("START|lot543887|Corn_2022_v2|CHG|A test measurement");
+                CallbackLog.TryDequeue(out _); // dont care about start response in this test...
+                channel.BroadcastedMessages.TryDequeue(out _); // We also dont care about the broadcast reply for start...
+                controller.StateChanged(BlobAnalyzerState.IDLE);
+                channel.GenerateMessage("STOP");
 
+                // Check that the correct method in the controller was invoked as expected
+                CallbackLog.TryDequeue(out string lastCommand);
+                Assert.AreEqual(StopCommandInvokeMessage, lastCommand);
+                
+                // Check that the correct reply was replied on the channel
+                channel.BroadcastedMessages.TryDequeue(out var broadcastedReply);
+                Assert.AreEqual("ACK|STOP", broadcastedReply);
+            }
         }
 
         private class TestingChannel : IMessagingChannel
         {
-            private readonly Action<string> _broadcasted;
-
-            public TestingChannel(Action<string> Broadcasted)
-            {
-                _broadcasted = Broadcasted;
-            }
+            /// <summary>
+            /// Register of the messages that was broad casted, these are the replies from the real controller.
+            /// </summary>
+            public ConcurrentQueue<string> BroadcastedMessages = new ConcurrentQueue<string>();
 
             public void GenerateMessage(string x) =>
                 MessageReceived.Invoke(this, new NewMessageEventArgs { Value = x });
@@ -40,32 +70,35 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
             public void Dispose()  { }
 
             public event EventHandler<NewMessageEventArgs> MessageReceived;
+            
+
             public void Broadcast(string message)
             {
-                _broadcasted(message);
+                BroadcastedMessages.Enqueue(message);
             }
         }
 
         public ConcurrentQueue<string> CallbackLog = new ConcurrentQueue<string>();
-
-        public Task Start(string id, string initials, string comments) => new Task( () =>
-            CallbackLog.Enqueue($"{id}, {initials}, {comments}"));
-            
         
+        public void LoadRecipe(string recipeName) =>
+            CallbackLog.Enqueue($"{nameof(LoadRecipe)}({recipeName})");
 
-        public Task Stop(WaitCondition waitCondition, bool doFlush = false)
+        public void Start(string id, string initials, string comments, string predictionResiltFilename, string blobCollectionName) =>
+            CallbackLog.Enqueue($"{nameof(Start)}({id}, {initials}, {comments})");
+
+        const string StopCommandInvokeMessage = "Stop invoked";
+        public void Stop() =>
+            CallbackLog.Enqueue(StopCommandInvokeMessage);
+
+        public void Flush()
         {
             throw new NotImplementedException();
         }
 
-        public Task Flush()
+        public void Finish()
         {
             throw new NotImplementedException();
         }
-
-        public Task Finish()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

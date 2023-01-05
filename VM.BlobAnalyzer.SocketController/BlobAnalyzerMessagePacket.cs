@@ -30,7 +30,7 @@ namespace VM.BlobAnalyzer.SocketController
 
             if (tokens.Length == 0)
             {
-                result.Command = PacketHeader.UNKNOWN;
+                result.Command = PacketHeader.NACK;
                 return result;
             }
             
@@ -40,7 +40,7 @@ namespace VM.BlobAnalyzer.SocketController
             }
             else
             {
-                result.Command = PacketHeader.UNKNOWN;
+                result.Command = PacketHeader.NACK;
             }
             
             try
@@ -65,13 +65,13 @@ namespace VM.BlobAnalyzer.SocketController
                     }
                 }
 
-                result.SampleId = tokens[1];
                 switch (parsedProcessingHeader)
                 {
                     //     0          1               2          3                   4 
                     //"START|     1299 | example_recipe |   300310 |          COMMENTS
                     //"START| SampleID |    RECIPE_NAME | OPERATOR | Here are comments
                     case PacketHeader.START:
+                        result.SampleId = tokens[1];
                         result.RecipeName = tokens[2];
                         result.Operator = tokens[3];
                         result.Comment = tokens[4];
@@ -79,6 +79,9 @@ namespace VM.BlobAnalyzer.SocketController
                     case PacketHeader.NACK:
                         result.SampleId = null;
                         result.ErrorMessage = tokens[1];
+                        break;
+                    case PacketHeader.SAMPLING_DONE:
+                        result.SampleId = tokens[1];
                         break;
                 }
             }
@@ -137,13 +140,13 @@ namespace VM.BlobAnalyzer.SocketController
             {
                 case PacketHeader.START:
                     return $"{commandTranslation}|{SampleId}|{RecipeName}|{Operator}|{Comment}";
-                case PacketHeader.SAMPLING_DONE:
-                    break;
                 case PacketHeader.NACK:
                     return $"{commandTranslation}|{ErrorMessage}";
+                case PacketHeader.SAMPLING_DONE:
+                    return $"{commandTranslation}|{SampleId}";
+                    
             }
-            // Fallback to header + ActivityID
-            return $"{commandTranslation}|{SampleId}";
+            return $"{commandTranslation}";
         }
     }
 

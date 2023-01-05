@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Runtime.CompilerServices;
-using VM.Lab.Interfaces.Autofeeder;
+using System.Threading;
+using VM.Lab.Interfaces.BlobAnalyzer;
 
 [assembly:InternalsVisibleTo("VM.BlobAnalyzer.SocketController.UnitTest", AllInternalsVisible =true)]
 namespace VM.BlobAnalyzer.SocketController
@@ -37,7 +37,6 @@ namespace VM.BlobAnalyzer.SocketController
 				MessageReceived(e.Value);
 		}
 
-		private BlobAnalyzerMessagePacket _lastStartMessage;
 		public void MessageReceived(string message)
 		{
 			Console.WriteLine($"AutofeederController << received message: {message}");
@@ -46,12 +45,33 @@ namespace VM.BlobAnalyzer.SocketController
 			switch (parsedMessage.Command)
 			{
 				case PacketHeader.START:
-					if (registreredState == AutofeederState.Idle || registreredState == AutofeederState.Stopped)
+					if (registreredState == BlobAnalyzerState.IDLE || registreredState == BlobAnalyzerState.None)
 					{
-						_lastStartMessage = parsedMessage;
-						_listener.Start(parsedMessage.SampleId, parsedMessage.Operator, parsedMessage.Comment)
-							.Start();
-						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
+						StateChangedEvent.Reset();
+						_listener.LoadRecipe(parsedMessage.RecipeName);
+						bool waitOK = StateChangedEvent.WaitOne(5000);
+						
+						bool correctState = (registreredState == BlobAnalyzerState.IDLE);
+						if (correctState )
+						{
+							var measurementTime = DateTime.Now;
+							_listener.Start(
+								parsedMessage.SampleId, 
+								parsedMessage.Operator, 
+								parsedMessage.Comment,
+								GetPredictionResultFilename(parsedMessage.SampleId, measurementTime),
+								GetBlobCollectionSubfolder(parsedMessage.SampleId, measurementTime));
+							BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
+						}
+						else
+						{
+							string reason = $"Autofeeder didnt change to  invalid state {registreredState}, unable to accept start request.";
+							BroadcastAndPrint(new BlobAnalyzerMessagePacket
+							{
+								Command = PacketHeader.NACK,
+								ErrorMessage = reason
+							}.ToString());
+						}
 					}
 					else
 					{
@@ -69,7 +89,7 @@ namespace VM.BlobAnalyzer.SocketController
 				case PacketHeader.SAMPLING_DONE:
 					break;
 				case PacketHeader.FINISH:
-					if (registreredState == AutofeederState.Stopped)
+					if (registreredState == BlobAnalyzerState.STOPPED)
 					{
 						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
 						_listener.Finish();
@@ -91,9 +111,12 @@ namespace VM.BlobAnalyzer.SocketController
 					break;
 
 				case PacketHeader.STOP:
-					if (registreredState == AutofeederState.Running || registreredState == AutofeederState.Flushing)
+					if (registreredState == BlobAnalyzerState.MEASURING 
+						|| registreredState == BlobAnalyzerState.FLUSHING_IDLE
+						|| registreredState == BlobAnalyzerState.FLUSHING_NONE
+						|| registreredState == BlobAnalyzerState.FLUSHING_STOPPED)
 					{
-						_listener.Stop(WaitCondition.Wait_All_Queues_Empty);
+						_listener.Stop();
 						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
 					}
 					else
@@ -108,7 +131,9 @@ namespace VM.BlobAnalyzer.SocketController
 					}
 					break;
 				case PacketHeader.FLUSH:
-					if (registreredState == AutofeederState.Stopped || registreredState == AutofeederState.Idle)
+					if (registreredState == BlobAnalyzerState.STOPPED 
+						|| registreredState == BlobAnalyzerState.IDLE 
+						|| registreredState == BlobAnalyzerState.None)
 					{
 						_listener.Flush();
 						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
@@ -135,36 +160,32 @@ namespace VM.BlobAnalyzer.SocketController
 			_messageChannel.Broadcast(message);
 		}
 
-		private AutofeederState registreredState = AutofeederState.Idle;
+		private AutoResetEvent StateChangedEvent = new AutoResetEvent(false);
+		private BlobAnalyzerState registreredState = BlobAnalyzerState.None;
 
-		public override void StateChanged(AutofeederState oldState, AutofeederState newState, string sampleId, DataTable result)
+		public override void StateChanged(BlobAnalyzerState newState)
 		{
-			Console.WriteLine($"AutofeederController: StateChanged({oldState}, {newState}, {sampleId}, ...)");
+			Console.WriteLine($"AutofeederController: StateChanged({newState})");
 			registreredState = newState;
+			StateChangedEvent.Set();
 
 			// When we have stopped. alert operator
-			if ((oldState == AutofeederState.Stopping || oldState == AutofeederState.Flushing)
-				 && newState == AutofeederState.Stopped)
+			if (newState == BlobAnalyzerState.STOPPED)
 			{
-				BroadcastAndPrint(new BlobAnalyzerMessagePacket { Command = PacketHeader.SAMPLING_DONE, SampleId = sampleId }.ToString());
+				BroadcastAndPrint(
+					new BlobAnalyzerMessagePacket
+					{
+						Command = PacketHeader.SAMPLING_DONE
+					}.ToString());
 			}
 		}
 
-		public override string GetBlobCollectionSubfolder(DateTime measurementStartTime)
-		{
-			if (_lastStartMessage.Command != PacketHeader.START)
-				return null;
+		public string GetBlobCollectionSubfolder(string sampleId, DateTime measurementStartTime) =>
+			$"{sampleId}_{measurementStartTime.ToString("yyyyMMdd_HHmmss")}";
 
-			return $"{_lastStartMessage.SampleId}_{measurementStartTime.ToString("yyyyMMdd_HHmmss")}";
-		}
-
-		public override string GetPredictionResultFilename(DateTime measurementStartTime)
-		{
-			if (_lastStartMessage.Command != PacketHeader.START)
-				return null;
-			
-			return $"PredictionResult_{_lastStartMessage.SampleId}_{measurementStartTime.ToString("yyyyMMdd_HHmmss")}.xlsx";
-		}
+		public string GetPredictionResultFilename(string sampleId, DateTime measurementStartTime) =>
+			 $"PredictionResult_{sampleId}_{measurementStartTime.ToString("yyyyMMdd_HHmmss")}.xlsx";
+		
 		
 		protected override void Dispose(bool disposing)
 		{

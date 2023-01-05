@@ -41,47 +41,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VM.DateTimeParser, Version=2.1.7381.18769, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.DateTimeParser.2.1.1\lib\net461\VM.DateTimeParser.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.FreehandLayerIO, Version=2.0.7692.28463, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.FreehandLayerIO.0.0.2\lib\net461\VM.FreehandLayerIO.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Illumination, Version=2.0.7374.22276, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Illumination.1.0.8\lib\net461\VM.Illumination.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Image, Version=3.0.25.5650, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Image.3.0.25\lib\net461\VM.Image.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Image.Compression, Version=3.0.25.5650, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Image.3.0.25\lib\net461\VM.Image.Compression.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Image.Graphics, Version=3.0.25.5650, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Image.3.0.25\lib\net461\VM.Image.Graphics.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Image.IO, Version=3.0.25.5650, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Image.3.0.25\lib\net461\VM.Image.IO.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Image.IppNew, Version=3.0.25.5650, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Image.3.0.25\lib\net461\VM.Image.IppNew.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.IPP, Version=2.0.7369.17200, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.IPP.1.1.1\lib\net461\VM.IPP.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Lab.Interfaces.Autofeeder, Version=2.1.13.6577, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Lab.Interfaces.2.0.13\lib\net461\VM.Lab.Interfaces.Autofeeder.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Lab.Interfaces.Image, Version=2.1.13.6577, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Lab.Interfaces.2.0.13\lib\net461\VM.Lab.Interfaces.Image.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Lab.Interfaces.Session, Version=2.1.13.6577, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Lab.Interfaces.2.0.13\lib\net461\VM.Lab.Interfaces.Session.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Primitives, Version=2.0.7232.22135, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Primitives.2.0.2\lib\net461\VM.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="VM.Progress, Version=2.0.7059.24362, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VM.Progress.1.0.1\lib\net461\VM.Progress.dll</HintPath>
+    <Reference Include="VM.Lab.Interfaces.BlobAnalyzer, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VM.Lab.Interfaces.BlobAnalyzer.0.1.5\lib\netstandard2.0\VM.Lab.Interfaces.BlobAnalyzer.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
