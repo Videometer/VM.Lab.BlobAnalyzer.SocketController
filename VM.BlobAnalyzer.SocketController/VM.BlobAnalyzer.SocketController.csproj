@@ -51,7 +51,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutofeederController.cs" />
+    <Compile Include="BlobAnalyzerSocketController.cs" />
     <Compile Include="BlobAnalyzerMessagePacket.cs" />
     <Compile Include="IMessagingChannel.cs" />
     <Compile Include="NewMessageEventArgs.cs" />

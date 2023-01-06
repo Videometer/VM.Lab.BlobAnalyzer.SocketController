@@ -6,7 +6,7 @@ using VM.Lab.Interfaces.BlobAnalyzer;
 [assembly:InternalsVisibleTo("VM.BlobAnalyzer.SocketController.UnitTest", AllInternalsVisible =true)]
 namespace VM.BlobAnalyzer.SocketController
 {
-	public class AutofeederController : AutofeederControl
+	public class BlobAnalyzerSocketController : AutofeederControl
 	{
 		private IMessagingChannel _messageChannel;
 
@@ -14,15 +14,16 @@ namespace VM.BlobAnalyzer.SocketController
 		///  Creates the controller using a Socket connection on port 8888 as server listening for commands
 		/// </summary>
 		/// <param name="listener"></param>
-		public AutofeederController(IAutofeederControlListener listener) : base(listener)
+		public BlobAnalyzerSocketController(IAutofeederControlListener listener) : base(listener)
 		{
+			Console.WriteLine($"Started {nameof(BlobAnalyzerSocketController)}");
 			const short socketPort = 8888;
 			SetChannel(
 				new SocketServerChannelWrapper(
 					socketPort));
 		}
 		
-		internal AutofeederController(
+		internal BlobAnalyzerSocketController(
 			IAutofeederControlListener listener, 
 			IMessagingChannel channel)
 			 : base(listener)
@@ -39,7 +40,7 @@ namespace VM.BlobAnalyzer.SocketController
 
 		public void MessageReceived(string message)
 		{
-			Console.WriteLine($"AutofeederController << received message: {message}");
+			Console.WriteLine($"BlobAnalyzerSocketController << received message: {message}");
 
 			var parsedMessage = BlobAnalyzerMessagePacket.FromMessage(message);
 			switch (parsedMessage.Command)
@@ -65,7 +66,7 @@ namespace VM.BlobAnalyzer.SocketController
 						}
 						else
 						{
-							string reason = $"Autofeeder didnt change to  invalid state {registreredState}, unable to accept start request.";
+							string reason = $"Blob Analyzer didnt change to  invalid state {registreredState}, unable to accept start request.";
 							BroadcastAndPrint(new BlobAnalyzerMessagePacket
 							{
 								Command = PacketHeader.NACK,
@@ -75,7 +76,7 @@ namespace VM.BlobAnalyzer.SocketController
 					}
 					else
 					{
-						string reason = $"Autofeeder in invalid state {registreredState}, unable to accept start request.";
+						string reason = $"Blob Analyzer in invalid state {registreredState}, unable to accept start request.";
 						BroadcastAndPrint(new BlobAnalyzerMessagePacket
 						{
 							Command = PacketHeader.NACK,
@@ -125,7 +126,7 @@ namespace VM.BlobAnalyzer.SocketController
 						{
 							Command = PacketHeader.NACK,
 							SampleId = parsedMessage.SampleId,
-							ErrorMessage = $"Autofeeder not in running or flushing state, state= {registreredState}"
+							ErrorMessage = $"Blob Analyzer not in running or flushing state, state= {registreredState}"
 						}.ToString());
 
 					}
@@ -148,15 +149,12 @@ namespace VM.BlobAnalyzer.SocketController
 						}.ToString());
 					}
 					break;
-
-				default:
-					break;
 			}
 		}
 		
 		private void BroadcastAndPrint(string message)
 		{
-			Console.WriteLine($"AutofeederController >> Sending: {message}");
+			Console.WriteLine($"BlobAnalyzerSocketController >> Sending: {message}");
 			_messageChannel.Broadcast(message);
 		}
 
@@ -165,7 +163,7 @@ namespace VM.BlobAnalyzer.SocketController
 
 		public override void StateChanged(BlobAnalyzerState newState)
 		{
-			Console.WriteLine($"AutofeederController: StateChanged({newState})");
+			Console.WriteLine($"BlobAnalyzerSocketController: StateChanged({newState})");
 			registreredState = newState;
 			StateChangedEvent.Set();
 

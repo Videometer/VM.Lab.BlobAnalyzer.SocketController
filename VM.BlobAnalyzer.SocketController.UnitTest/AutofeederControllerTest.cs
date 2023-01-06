@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using VM.Lab.Interfaces.BlobAnalyzer;
 
@@ -14,8 +11,10 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
         public void TestSendingStartMessageInvokesStartAction()
         {
             TestingChannel channel = new TestingChannel();
-            using (new AutofeederController(this, channel))
+            using (var controller = new BlobAnalyzerSocketController(this, channel))
             {
+                // Pretend a recipe is loading by setting state to IDLE
+                controller.StateChanged(BlobAnalyzerState.IDLE);
                 // This message should pass into the controller that invoked the Start(x,y,z) callback
                 string message = "START|lot543887|Corn_2022_v2|CHG|A test measurement";
                 channel.GenerateMessage(message);
@@ -34,17 +33,19 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
             }
         }
         
+        /// <summary>
+        /// Test that we can send stop command for all relevant states.
+        /// </summary>
+        /// <param name="sourceState"></param>
         [Test]
-        public void TestSendingStopMessageAfterStartInvokesStopAction()
+        public void TestSendingStopMessageInvokesStopAction(
+        [Values(BlobAnalyzerState.MEASURING, BlobAnalyzerState.FLUSHING_IDLE,  BlobAnalyzerState.FLUSHING_NONE, BlobAnalyzerState.FLUSHING_STOPPED)] BlobAnalyzerState sourceState)
         {
             TestingChannel channel = new TestingChannel();
-            using (var controller = new AutofeederController(this, channel))
+            using (var controller = new BlobAnalyzerSocketController(this, channel))
             {
-                // This message should pass into the controller that invoked the Start(x,y,z) callback
-                channel.GenerateMessage("START|lot543887|Corn_2022_v2|CHG|A test measurement");
-                CallbackLog.TryDequeue(out _); // dont care about start response in this test...
-                channel.BroadcastedMessages.TryDequeue(out _); // We also dont care about the broadcast reply for start...
-                controller.StateChanged(BlobAnalyzerState.IDLE);
+                // Pretend we are measuring, which should be possible to sto
+                controller.StateChanged(sourceState);
                 channel.GenerateMessage("STOP");
 
                 // Check that the correct method in the controller was invoked as expected
@@ -54,6 +55,30 @@ namespace VM.BlobAnalyzer.SocketController.UnitTest
                 // Check that the correct reply was replied on the channel
                 channel.BroadcastedMessages.TryDequeue(out var broadcastedReply);
                 Assert.AreEqual("ACK|STOP", broadcastedReply);
+            }
+        }
+        
+        [Test]
+        public void TestSendingStopIsIgnoredFromSomeInvalidStates(
+            [Values(BlobAnalyzerState.None, BlobAnalyzerState.LOADING_RECIPE,  BlobAnalyzerState.IDLE)] BlobAnalyzerState sourceState)
+        {
+            TestingChannel channel = new TestingChannel();
+            using (var controller = new BlobAnalyzerSocketController(this, channel))
+            {
+                // Pretend we are measuring, which should be possible to sto
+                controller.StateChanged(sourceState);
+                channel.GenerateMessage("STOP");
+
+                // Check that the correct method in the controller was invoked as expected
+                CallbackLog.TryDequeue(out string lastCommand);
+                Assert.AreEqual(null, lastCommand);
+                
+                // Check that the correct reply was replied on the channel
+                channel.BroadcastedMessages.TryDequeue(out var broadcastedReply);
+                Assert.IsTrue(
+                    broadcastedReply
+                        .StartsWith(
+                            "NACK|Blob Analyzer not in running or flushing state"));
             }
         }
 
