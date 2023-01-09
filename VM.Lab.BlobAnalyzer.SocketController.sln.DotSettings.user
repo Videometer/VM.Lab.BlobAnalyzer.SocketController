@@ -6,4 +6,5 @@
     &lt;TestId&gt;NUnit2x::16E00457-7983-4F4D-846D-350154B695E6::.NETFramework,Version=v4.6.1::VM.BlobAnalyzer.SocketController.UnitTest.AutofeederControllerTest.TestSendingStartMessageInvokesStartAction&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit2x::16E00457-7983-4F4D-846D-350154B695E6::.NETFramework,Version=v4.6.1::VM.BlobAnalyzer.SocketController.UnitTest.AutofeederControllerTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+&lt;/SessionState&gt;</s:String>
+	</wpf:ResourceDictionary>
