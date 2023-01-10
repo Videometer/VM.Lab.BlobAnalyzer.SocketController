@@ -7,7 +7,7 @@
     <ProjectGuid>{16E00457-7983-4F4D-846D-350154B695E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VM.BlobAnalyzer.SocketController.UnitTest</RootNamespace>
+    <RootNamespace>VM.Lab.BlobAnalyzer.SocketController.UnitTest</RootNamespace>
     <AssemblyName>VM.Lab.BlobAnalyzer.SocketController.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
