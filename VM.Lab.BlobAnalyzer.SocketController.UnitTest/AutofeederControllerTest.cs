@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using NUnit.Framework;
-using VM.BlobAnalyzer.SocketController;
 using VM.Lab.Interfaces.BlobAnalyzer;
 
 namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest

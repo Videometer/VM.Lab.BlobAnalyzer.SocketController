@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VM.BlobAnalyzer.SocketController
+namespace VM.Lab.BlobAnalyzer.SocketController
 {
     /// <summary>
     /// Converts messages between string and a dataobject for easy use in the code 

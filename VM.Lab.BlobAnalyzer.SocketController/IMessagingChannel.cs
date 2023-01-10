@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using VM.Communication;
 
 [assembly:InternalsVisibleTo("VM.Lab.BlobAnalyzer.SocketController.UnitTest", AllInternalsVisible =true)]
-namespace VM.BlobAnalyzer.SocketController
+namespace VM.Lab.BlobAnalyzer.SocketController
 {
     /// <summary>
     /// Messaging channel to abstract away socket server to allow testing the Controller
