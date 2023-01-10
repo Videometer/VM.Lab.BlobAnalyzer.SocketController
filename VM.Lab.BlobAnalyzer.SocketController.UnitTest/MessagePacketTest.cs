@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VM.BlobAnalyzer.SocketController;
 
-namespace VM.BlobAnalyzer.SocketController.UnitTest
+namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest
 {
     [TestFixture]
     public class MessagePacketTest

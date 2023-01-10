@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using VM.Lab.Interfaces.BlobAnalyzer;
 
-[assembly:InternalsVisibleTo("VM.BlobAnalyzer.SocketController.UnitTest", AllInternalsVisible =true)]
+[assembly:InternalsVisibleTo("VM.Lab.BlobAnalyzer.SocketController.UnitTest", AllInternalsVisible =true)]
 namespace VM.BlobAnalyzer.SocketController
 {
 	public class BlobAnalyzerSocketController : AutofeederControl

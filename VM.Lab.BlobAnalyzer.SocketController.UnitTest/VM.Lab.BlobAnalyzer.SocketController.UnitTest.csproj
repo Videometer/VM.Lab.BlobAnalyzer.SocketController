@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VM.BlobAnalyzer.SocketController.UnitTest</RootNamespace>
-    <AssemblyName>VM.BlobAnalyzer.SocketController.UnitTest</AssemblyName>
+    <AssemblyName>VM.Lab.BlobAnalyzer.SocketController.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,9 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VM.BlobAnalyzer.SocketController\VM.BlobAnalyzer.SocketController.csproj">
+    <ProjectReference Include="..\VM.Lab.BlobAnalyzer.SocketController\VM.Lab.BlobAnalyzer.SocketController.csproj">
       <Project>{0418b823-d824-4913-a695-b774eab1c830}</Project>
-      <Name>VM.BlobAnalyzer.SocketController</Name>
+      <Name>VM.Lab.BlobAnalyzer.SocketController</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

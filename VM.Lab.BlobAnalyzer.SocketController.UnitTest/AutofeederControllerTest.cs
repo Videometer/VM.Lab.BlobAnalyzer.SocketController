@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using NUnit.Framework;
+using VM.BlobAnalyzer.SocketController;
 using VM.Lab.Interfaces.BlobAnalyzer;
 
-namespace VM.BlobAnalyzer.SocketController.UnitTest
+namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest
 {
     public class AutofeederControllerTest : IAutofeederControlListener
     {
