@@ -46,13 +46,21 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 			switch (parsedMessage.Command)
 			{
 				case PacketHeader.START:
-					if (registreredState == BlobAnalyzerState.IDLE || registreredState == BlobAnalyzerState.None)
+					if (_registreredState == BlobAnalyzerState.IDLE || _registreredState == BlobAnalyzerState.None)
 					{
 						StateChangedEvent.Reset();
 						_listener.LoadRecipe(parsedMessage.RecipeName);
-						bool waitOK = StateChangedEvent.WaitOne(5000);
 						
-						bool correctState = (registreredState == BlobAnalyzerState.IDLE);
+						// Wait till some state has changed
+						bool waitOK = StateChangedEvent.WaitOne(5000);
+
+						if (_registreredState == BlobAnalyzerState.LOADING_RECIPE)
+						{
+							// If it's still loading recipe, wait til next state change
+							var waitOK_LOADING = StateChangedEvent.WaitOne(20000);
+						}
+
+						bool correctState = (_registreredState == BlobAnalyzerState.IDLE);
 						if (correctState )
 						{
 							var measurementTime = DateTime.Now;
@@ -66,7 +74,7 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 						}
 						else
 						{
-							string reason = $"Blob Analyzer didnt change to  invalid state {registreredState}, unable to accept start request.";
+							string reason = $"Blob Analyzer didnt change to  invalid state {_registreredState}, unable to accept start request.";
 							BroadcastAndPrint(new BlobAnalyzerMessagePacket
 							{
 								Command = PacketHeader.NACK,
@@ -76,7 +84,7 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 					}
 					else
 					{
-						string reason = $"Blob Analyzer in invalid state {registreredState}, unable to accept start request.";
+						string reason = $"Blob Analyzer in invalid state {_registreredState}, unable to accept start request.";
 						BroadcastAndPrint(new BlobAnalyzerMessagePacket
 						{
 							Command = PacketHeader.NACK,
@@ -90,7 +98,7 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 				case PacketHeader.SAMPLING_DONE:
 					break;
 				case PacketHeader.FINISH:
-					if (registreredState == BlobAnalyzerState.STOPPED)
+					if (_registreredState == BlobAnalyzerState.STOPPED)
 					{
 						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
 						_listener.Finish();
@@ -101,7 +109,7 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 						{
 							Command = PacketHeader.NACK,
 							SampleId = parsedMessage.SampleId,
-							ErrorMessage = $"Autofeeder not in stopped state, state= {registreredState}"
+							ErrorMessage = $"Autofeeder not in stopped state, state= {_registreredState}"
 						}.ToString());
 					}
 					break;
@@ -112,10 +120,10 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 					break;
 
 				case PacketHeader.STOP:
-					if (registreredState == BlobAnalyzerState.MEASURING 
-						|| registreredState == BlobAnalyzerState.FLUSHING_IDLE
-						|| registreredState == BlobAnalyzerState.FLUSHING_NONE
-						|| registreredState == BlobAnalyzerState.FLUSHING_STOPPED)
+					if (_registreredState == BlobAnalyzerState.MEASURING 
+						|| _registreredState == BlobAnalyzerState.FLUSHING_IDLE
+						|| _registreredState == BlobAnalyzerState.FLUSHING_NONE
+						|| _registreredState == BlobAnalyzerState.FLUSHING_STOPPED)
 					{
 						_listener.Stop();
 						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
@@ -126,15 +134,15 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 						{
 							Command = PacketHeader.NACK,
 							SampleId = parsedMessage.SampleId,
-							ErrorMessage = $"Blob Analyzer not in running or flushing state, state= {registreredState}"
+							ErrorMessage = $"Blob Analyzer not in running or flushing state, state= {_registreredState}"
 						}.ToString());
 
 					}
 					break;
 				case PacketHeader.FLUSH:
-					if (registreredState == BlobAnalyzerState.STOPPED 
-						|| registreredState == BlobAnalyzerState.IDLE 
-						|| registreredState == BlobAnalyzerState.None)
+					if (_registreredState == BlobAnalyzerState.STOPPED 
+						|| _registreredState == BlobAnalyzerState.IDLE 
+						|| _registreredState == BlobAnalyzerState.None)
 					{
 						_listener.Flush();
 						BroadcastAndPrint(BlobAnalyzerMessagePacket.Ack(message));
@@ -145,7 +153,7 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 						{
 							Command = PacketHeader.NACK,
 							SampleId = parsedMessage.SampleId,
-							ErrorMessage = $"Autofeeder not in stopped or idle state, state= {registreredState}"
+							ErrorMessage = $"Autofeeder not in stopped or idle state, state= {_registreredState}"
 						}.ToString());
 					}
 					break;
@@ -159,12 +167,12 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 		}
 
 		private AutoResetEvent StateChangedEvent = new AutoResetEvent(false);
-		private BlobAnalyzerState registreredState = BlobAnalyzerState.None;
+		private BlobAnalyzerState _registreredState = BlobAnalyzerState.None;
 
 		public override void StateChanged(BlobAnalyzerState newState)
 		{
 			Console.WriteLine($"BlobAnalyzerSocketController: StateChanged({newState})");
-			registreredState = newState;
+			_registreredState = newState;
 			StateChangedEvent.Set();
 
 			// When we have stopped. alert operator
