@@ -13,6 +13,8 @@ namespace VM.Lab.BlobAnalyzer.SocketController
     /// </summary>
     public struct BlobAnalyzerMessagePacket
     {
+        private const string _errorMsg = "An error has occurred";
+
         public static BlobAnalyzerMessagePacket FromMessage(string message)
         {
             var result = new BlobAnalyzerMessagePacket();
@@ -144,7 +146,8 @@ namespace VM.Lab.BlobAnalyzer.SocketController
                     return $"{commandTranslation}|{ErrorMessage}";
                 case PacketHeader.SAMPLING_DONE:
                     return $"{commandTranslation}|{SampleId}";
-                    
+                case PacketHeader.ERROR:
+                    return $"{commandTranslation}|{_errorMsg}";
             }
             return $"{commandTranslation}";
         }
@@ -163,5 +166,6 @@ namespace VM.Lab.BlobAnalyzer.SocketController
         FINISH,
         STOP,
         FLUSH,
+        ERROR
     }
 }

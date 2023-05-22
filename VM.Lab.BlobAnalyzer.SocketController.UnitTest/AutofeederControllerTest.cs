@@ -33,6 +33,23 @@ namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest
             }
         }
         
+        [Test]
+        public void TestThatErrorHasBeenBroadcasted()
+        {
+            TestingChannel channel = new TestingChannel();
+            using (var controller = new BlobAnalyzerSocketController(this, channel))
+            {
+                // Pretend a recipe is loading by setting state to IDLE
+                controller.StateChanged(BlobAnalyzerState.IDLE);
+                
+                controller.BroadcastError();
+                
+                channel.BroadcastedMessages.TryDequeue(out var broadcastedReply);
+                
+                Assert.AreEqual("ERROR|An error has occurred", broadcastedReply);
+            }
+        }
+        
         /// <summary>
         /// Test that we can send stop command for all relevant states.
         /// </summary>

@@ -186,6 +186,15 @@ namespace VM.Lab.BlobAnalyzer.SocketController
 			}
 		}
 
+		public override void BroadcastError()
+		{
+			BroadcastAndPrint(
+				new BlobAnalyzerMessagePacket
+				{
+					Command = PacketHeader.ERROR
+				}.ToString());
+		}
+
 		public string GetBlobCollectionSubfolder(string sampleId, DateTime measurementStartTime) =>
 			$"{sampleId}_{measurementStartTime.ToString("yyyyMMdd_HHmmss")}";
 

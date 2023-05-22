@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="2.6.4" />
-    <PackageReference Include="VM.Lab.Interfaces.BlobAnalyzer" Version="0.1.5" />
+    <PackageReference Include="VM.Lab.Interfaces.BlobAnalyzer" Version="0.1.6" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

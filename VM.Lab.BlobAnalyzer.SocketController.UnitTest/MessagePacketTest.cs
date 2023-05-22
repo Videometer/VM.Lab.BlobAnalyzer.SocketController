@@ -113,6 +113,14 @@ namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest
                 },
                 "ACK|FLUSH"
             };
+            yield return new object[]
+            {
+                new BlobAnalyzerMessagePacket
+                {
+                    Command = PacketHeader.ERROR
+                },
+                "ERROR|An error has occurred"
+            };
         }
         
         [Test, TestCaseSource(nameof(MessagePackagesToSocketCommandMapping))]
