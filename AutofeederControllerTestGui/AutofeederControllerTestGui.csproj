@@ -75,6 +75,9 @@
     <Reference Include="VM.Lab.Interfaces.Autofeeder, Version=2.1.13.6577, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\VM.Lab.Interfaces.2.0.13\lib\net461\VM.Lab.Interfaces.Autofeeder.dll</HintPath>
     </Reference>
+    <Reference Include="VM.Lab.Interfaces.BlobAnalyzer">
+      <HintPath>C:\Users\okb.INT\.nuget\packages\vm.lab.interfaces.blobanalyzer\1.0.1\lib\netstandard2.0\VM.Lab.Interfaces.BlobAnalyzer.dll</HintPath>
+    </Reference>
     <Reference Include="VM.Lab.Interfaces.Image, Version=2.1.13.6577, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\VM.Lab.Interfaces.2.0.13\lib\net461\VM.Lab.Interfaces.Image.dll</HintPath>
     </Reference>
@@ -141,6 +144,10 @@
     <ProjectReference Include="..\VM.BlobAnalyzer.SocketController\VM.BlobAnalyzer.SocketController.csproj">
       <Project>{0418b823-d824-4913-a695-b774eab1c830}</Project>
       <Name>VM.BlobAnalyzer.SocketController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VM.Lab.BlobAnalyzer.SocketController\VM.Lab.BlobAnalyzer.SocketController.csproj">
+      <Project>{0418b823-d824-4913-a695-b774eab1c830}</Project>
+      <Name>VM.Lab.BlobAnalyzer.SocketController</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

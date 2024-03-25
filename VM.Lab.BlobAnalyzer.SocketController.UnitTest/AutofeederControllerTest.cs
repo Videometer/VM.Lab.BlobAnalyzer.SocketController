@@ -128,6 +128,12 @@ namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest
         public void Start(string id, string initials, string comments, string predictionResiltFilename, string blobCollectionName) =>
             CallbackLog.Enqueue($"{nameof(Start)}({id}, {initials}, {comments})");
 
+        public void PrepareForStart(string id, string initials, string comments, string predictionResultName,
+            string blobCollectionName)
+        {
+            throw new NotImplementedException();
+        }
+
         const string StopCommandInvokeMessage = "Stop invoked";
         public void Stop() =>
             CallbackLog.Enqueue(StopCommandInvokeMessage);
