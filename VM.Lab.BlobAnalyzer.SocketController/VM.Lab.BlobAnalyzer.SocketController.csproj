@@ -1,40 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<PropertyGroup>
-  <Version>0.0.0.0</Version>
-  <PackageId>VM.Lab.BlobAnalyzer.SocketController</PackageId>
-</PropertyGroup>
-<PropertyGroup>
-  <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  <ProjectGuid>{0418B823-D824-4913-A695-B774EAB1C830}</ProjectGuid>
-  <RootNamespace>VM.Lab.BlobAnalyzer.SocketController</RootNamespace>
-  <AssemblyName>VM.Lab.BlobAnalyzer.SocketController</AssemblyName>
-  <TargetFramework>netstandard2.0</TargetFramework>
-  <LangVersion>7.3</LangVersion>
-  <Company>Videometer</Company>
-</PropertyGroup>
-<PropertyGroup>
-  <TargetFramework>netstandard2.0</TargetFramework>
-  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-</PropertyGroup>
-<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-  <DebugSymbols>true</DebugSymbols>
-  <DebugType>full</DebugType>
-  <Optimize>false</Optimize>
-  <OutputPath>bin\Debug\</OutputPath>
-  <DefineConstants>DEBUG;TRACE</DefineConstants>
-  <ErrorReport>prompt</ErrorReport>
-  <WarningLevel>4</WarningLevel>
-</PropertyGroup>
-<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-  <DebugType>pdbonly</DebugType>
-  <Optimize>true</Optimize>
-  <OutputPath>bin\Release\</OutputPath>
-  <DefineConstants>TRACE</DefineConstants>
-  <ErrorReport>prompt</ErrorReport>
-  <WarningLevel>4</WarningLevel>
-</PropertyGroup>
-<ItemGroup>
-  <PackageReference Include="VM.Communication.Socket" Version="3.0.1" />
-  <PackageReference Include="VM.Lab.Interfaces.BlobAnalyzer" Version="1.0.1" />
-</ItemGroup>
+  <PropertyGroup>
+    <Copyright>Videometer A/S</Copyright>
+    <Authors>Videometer A/S</Authors>
+    <OutputType>Library</OutputType>
+    <Version>0.0.0.0</Version>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Company>Videometer A/S</Company>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>x64</Platforms>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="VM.Communication.Socket" Version="3.0.2" />
+    <PackageReference Include="VM.Lab.Interfaces.BlobAnalyzer" Version="1.0.3" />
+  </ItemGroup>
 </Project>

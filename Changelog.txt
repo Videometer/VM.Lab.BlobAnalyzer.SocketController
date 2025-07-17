@@ -1,2 +1,5 @@
+2.0.7
+- Migrated to netstandard2.0;net8.0
+
 2.0.1
 - Starting point
