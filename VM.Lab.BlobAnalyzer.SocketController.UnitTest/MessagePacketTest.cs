@@ -159,7 +159,7 @@ namespace VM.Lab.BlobAnalyzer.SocketController.UnitTest
                 BlobAnalyzerMessagePacket.FromMessage("START|...").Command);
         }
 
-        public IEnumerable<PacketHeader> PacketHeaders() =>
+        public static IEnumerable<PacketHeader> PacketHeaders() =>
             Enum.GetNames(typeof(PacketHeader))
                 .Select(X => 
                     (PacketHeader)Enum.Parse(typeof(PacketHeader), X))
